@@ -25,6 +25,14 @@ QTextStream& qStdOut()
     return ts;
 }
 
+int createSQLiteDatabaseFromTextFile(const QString& source, const QString& destination)
+{
+    qStdOut() << "Source File: " << source << "\n";
+    qStdOut() << "Destination SQLite Database: " << destination << "\n";
+
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
@@ -59,8 +67,7 @@ int main(int argc, char *argv[])
     QString source = args.at(0);
     QString destination = args.at(1);
 
-    qStdOut() << "Source File: " << source << "\n";
-    qStdOut() << "Destination SQLite Database: " << destination << "\n";
+    int retCode = createSQLiteDatabaseFromTextFile(source, destination);
 
-    return app.exit();
+    return app.exit(retCode);
 }
