@@ -19,6 +19,8 @@
 #include <QCommandLineParser>
 #include <QTextStream>
 #include <QFile>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 QTextStream& qStdOut()
 {
@@ -26,29 +28,71 @@ QTextStream& qStdOut()
     return ts;
 }
 
-int createSQLiteDatabaseFromTextFile(const QString& source, const QString& destination)
+int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& destination)
 {
     qStdOut() << "Source File: " << source << "\n";
     qStdOut() << "Destination SQLite Database: " << destination << "\n";
 
     QFile sourceFile(source);
+    QFile destinationFile(destination);
 
-    if (!source.isEmpty() && sourceFile.exists())
+    if (destinationFile.exists())
     {
+        qStdOut() << "Error: Destination SQLite file already exists!\n";
+        return 1;
+    }
+
+    if (sourceFile.exists())
+    {
+        QString connectionName = QString();
+
         if (sourceFile.open(QIODevice::ReadOnly | QIODevice::Text))
         {
-            QTextStream in(&sourceFile);
-            QString line = in.readLine();
-            while (!line.isNull())
+            qStdOut() << "Let's go ...\n";
+
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+            db.setDatabaseName(destination);
+            connectionName = db.connectionName();
+
+            if (db.open())
             {
-                QStringList lineList = line.split(QString(":"), Qt::SkipEmptyParts);
+                // DB is generated in same directory as the script
+                QSqlQuery queryTable("CREATE TABLE passwords (hash text, prevalence integer)");
 
-                QString ntlmHash = lineList.at(0);
-                QString prevalence = lineList.at(1);
+                // index used for faster queries
+                QSqlQuery queryIndex("CREATE UNIQUE INDEX idx_hash ON passwords (hash)");
 
-                qStdOut() << "Hash: " << ntlmHash << " | Prevalence: " << prevalence << "\n";
+                quint64 count = 1;
+                QTextStream in(&sourceFile);
+                QString line = in.readLine();
+                while (!line.isNull())
+                {
+                    QStringList lineList = line.split(QString(":"), Qt::KeepEmptyParts);
 
-                line = in.readLine();
+                    QString ntlmHash = lineList.at(0);
+                    QString prevalence = lineList.at(1);
+
+                    // qStdOut() << "Hash: " << ntlmHash << " | Prevalence: " << prevalence << "\n";
+
+                    QSqlQuery queryInsert;
+                    queryInsert.prepare("INSERT INTO passwords (hash, prevalence) VALUES(?, ?)");
+                    queryInsert.bindValue(0, ntlmHash);
+                    queryInsert.bindValue(1, prevalence);
+                    queryInsert.exec();
+
+                    if (count % 1000000 == 0)
+                    {
+                        qint64 step = count / 1000000;
+                        qStdOut() << "1.000.000 done" << " (" << QString::number(step) << ")" << "\n";
+                    }
+
+                    count++;
+
+                    line = in.readLine();
+                }
+
+                db.commit();
+                db.close();
             }
 
             sourceFile.close();
@@ -57,6 +101,11 @@ int createSQLiteDatabaseFromTextFile(const QString& source, const QString& desti
         {
             qStdOut() << "Error: Unable to open/read source file!\n";
             return 1;
+        }
+
+        if (QFile::exists(destination))
+        {
+            QSqlDatabase::removeDatabase(connectionName);
         }
     }
     else
@@ -100,7 +149,7 @@ int main(int argc, char *argv[])
 
     if (args.count() != 2)
     {
-        qStdOut() << "Error: Invalid number of arguments, expected 2 arguments: source and destination.\nExiting...\n";
+        qStdOut() << "Error: Invalid number of arguments, expected 2 arguments: source and destination.\n";
         return app.exit(1);
     }
 
@@ -110,11 +159,11 @@ int main(int argc, char *argv[])
 
     if (source.trimmed().isEmpty() || destination.trimmed().isEmpty())
     {
-        qStdOut() << "Error: Empty arguments are not allowed.\nExiting...\n";
+        qStdOut() << "Error: Empty arguments are not allowed.\n";
         return app.exit(1);
     }
 
-    int retCode = createSQLiteDatabaseFromTextFile(source.trimmed(), destination.trimmed());
+    int retCode = createSQLiteDatabaseFromHashTextFile(source.trimmed(), destination.trimmed());
 
     return app.exit(retCode);
 }
