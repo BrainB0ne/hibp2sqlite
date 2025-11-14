@@ -18,6 +18,7 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QTextStream>
+#include <QFile>
 
 QTextStream& qStdOut()
 {
@@ -29,6 +30,38 @@ int createSQLiteDatabaseFromTextFile(const QString& source, const QString& desti
 {
     qStdOut() << "Source File: " << source << "\n";
     qStdOut() << "Destination SQLite Database: " << destination << "\n";
+
+    QFile sourceFile(source);
+
+    if (!source.isEmpty() && sourceFile.exists())
+    {
+        if (sourceFile.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QTextStream in(&sourceFile);
+            QString line = in.readLine();
+            while (!line.isNull())
+            {
+                QStringList lineList = line.split(QString(":"), Qt::SkipEmptyParts);
+
+                QString ntlmHash = lineList.at(0);
+                QString prevalence = lineList.at(1);
+
+                qStdOut() << "Hash: " << ntlmHash << " | Prevalence: " << prevalence << "\n";
+
+                line = in.readLine();
+            }
+
+            sourceFile.close();
+        }
+        else
+        {
+            return 1;
+        }
+    }
+    else
+    {
+        return 1;
+    }
 
     return 0;
 }
