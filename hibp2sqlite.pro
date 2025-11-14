@@ -24,6 +24,10 @@ CONFIG += c++17 cmdline
 SOURCES += \
         main.cpp
 
+win32 {
+RC_FILE = hibp2sqlite.rc
+}
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
