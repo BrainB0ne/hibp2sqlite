@@ -55,11 +55,13 @@ int createSQLiteDatabaseFromTextFile(const QString& source, const QString& desti
         }
         else
         {
+            qStdOut() << "Error: Unable to open/read source file!\n";
             return 1;
         }
     }
     else
     {
+        qStdOut() << "Error: Source file doesn't exist!\n";
         return 1;
     }
 
@@ -96,11 +98,23 @@ int main(int argc, char *argv[])
 
     const QStringList args = parser.positionalArguments();
 
+    if (args.count() != 2)
+    {
+        qStdOut() << "Error: Invalid number of arguments, expected 2 arguments: source and destination.\nExiting...\n";
+        return app.exit(1);
+    }
+
     // source is args.at(0), destination is args.at(1)
     QString source = args.at(0);
     QString destination = args.at(1);
 
-    int retCode = createSQLiteDatabaseFromTextFile(source, destination);
+    if (source.trimmed().isEmpty() || destination.trimmed().isEmpty())
+    {
+        qStdOut() << "Error: Empty arguments are not allowed.\nExiting...\n";
+        return app.exit(1);
+    }
+
+    int retCode = createSQLiteDatabaseFromTextFile(source.trimmed(), destination.trimmed());
 
     return app.exit(retCode);
 }
