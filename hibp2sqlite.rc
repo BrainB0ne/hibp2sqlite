@@ -18,7 +18,7 @@
 #include <winver.h>
 
 // icon
-IDI_ICON1   ICON    DISCARDABLE     "images/app.ico"
+IDI_ICON1   ICON    DISCARDABLE     "images/hibp2sqlite.ico"
 
 VS_VERSION_INFO     VERSIONINFO
 FILEVERSION         0, 1, 0, 0
