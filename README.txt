@@ -35,6 +35,9 @@ Note: the examples folder contains a small text file with 3 NTLM hashes for test
 If you are looking for a GUI application to start this console application and query the SQLite database, check out: haveibeenpwned-local
 More Information: https://github.com/BrainB0ne/haveibeenpwned-local or https://codeberg.org/BrainB0ne/haveibeenpwned-local
 
+Credits to the author of the following article since it gave me the idea to create this tool.
+https://medium.com/analytics-vidhya/creating-a-local-version-of-the-haveibeenpwned-password-database-with-python-and-sqlite-918a7b6a238a
+
 And last, but not least... Read the disclaimer below. :)
 
 Disclaimer
