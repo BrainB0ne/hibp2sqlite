@@ -25,3 +25,9 @@ Arguments:
   destination     Destination SQLite database.
 
 Note: the examples folder contains a small text file with 3 NTLM hashes for testing purposes.
+
+And last, but not least... Read the disclaimer below. :)
+
+Disclaimer
+* I'm not responsible for bricked devices, dead SD cards, thermonuclear war, or you getting fired because the alarm app failed.
+* YOU are choosing to run these tools, and if you point the finger at me for messing up your device, I will laugh at you.
