@@ -56,7 +56,7 @@ int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& d
 
             if (db.open())
             {
-                // DB is generated in same directory as the script
+                // DB is generated in the specified location
                 QSqlQuery queryTable("CREATE TABLE passwords (hash text, prevalence integer)");
 
                 // index used for faster queries
