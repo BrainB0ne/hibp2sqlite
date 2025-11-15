@@ -5,6 +5,9 @@
 # Executables
 *.exe
 
+# Corel Files
+*.cpt
+
 # C++ objects and libs
 *.slo
 *.lo
