@@ -32,6 +32,9 @@ Arguments:
 
 Note: the examples folder contains a small text file with 3 NTLM hashes for testing purposes.
 
+If you are looking for a GUI application to start this console application and query the SQLite database, check out: haveibeenpwned-local
+More Information: https://github.com/BrainB0ne/haveibeenpwned-local or https://codeberg.org/BrainB0ne/haveibeenpwned-local
+
 And last, but not least... Read the disclaimer below. :)
 
 Disclaimer
