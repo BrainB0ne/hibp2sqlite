@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
     if (args.count() != 2)
     {
         qStdOut() << "Error: Invalid number of arguments, expected 2 arguments: source and destination.\n";
-        return app.exit(1);
+        return 1;
     }
 
     // source is args.at(0), destination is args.at(1)
@@ -149,10 +149,10 @@ int main(int argc, char *argv[])
     if (source.trimmed().isEmpty() || destination.trimmed().isEmpty())
     {
         qStdOut() << "Error: Empty arguments are not allowed.\n";
-        return app.exit(1);
+        return 1;
     }
 
     int retCode = createSQLiteDatabaseFromHashTextFile(source.trimmed(), destination.trimmed());
 
-    return app.exit(retCode);
+    return retCode;
 }
