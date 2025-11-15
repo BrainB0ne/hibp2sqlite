@@ -93,6 +93,8 @@ int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& d
 
                 db.commit();
                 db.close();
+
+                qStdOut() << "SQLite database created successfully.\n";
             }
 
             sourceFile.close();
