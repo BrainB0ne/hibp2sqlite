@@ -56,6 +56,63 @@ int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& d
 
             if (db.open())
             {
+                // deactivate all not needed features.
+                // Documentation https://www.sqlite.org/pragma.html
+
+                // Query, set, or clear the enforcement of foreign key constraints.
+                // This pragma is a no-op within a transaction; foreign key constraint enforcement may only be enabled or disabled when there is no pending BEGIN or SAVEPOINT.
+                // Changing the foreign_keys setting affects the execution of all statements prepared using the database connection,
+                // including those prepared before the setting was changed.
+                // Any existing statements prepared using the legacy sqlite3_prepare() interface may fail with an SQLITE_SCHEMA error after the foreign_keys setting is changed.
+                // As of SQLite version 3.6.19, the default setting for foreign key enforcement is OFF.
+                // However, that might change in a future release of SQLite.
+                // The default setting for foreign key enforcement can be specified at compile-time using the SQLITE_DEFAULT_FOREIGN_KEYS preprocessor macro.
+                // To minimize future problems, applications should set the foreign key enforcement flag as required by the application and not depend on the default setting.
+                QSqlQuery queryPragma_foreign_keys("PRAGMA foreign_keys = false");
+
+                // The OFF journaling mode disables the rollback journal completely.
+                // No rollback journal is ever created and hence there is never a rollback journal to delete.
+                // The OFF journaling mode disables the atomic commit and rollback capabilities of SQLite.
+                // The ROLLBACK command no longer works; it behaves in an undefined way.
+                // Applications must avoid using the ROLLBACK command when the journal mode is OFF.
+                // If the application crashes in the middle of a transaction when the OFF journaling mode is set,
+                // then the database file will very likely go corrupt. Without a journal,
+                // there is no way for a statement to unwind partially completed operations following a constraint error.
+                // This might also leave the database in a corrupted state. For example,
+                // if a duplicate entry causes a CREATE UNIQUE INDEX statement to fail half-way through,
+                // it will leave behind a partially created, and hence corrupt, index.
+                // Because OFF journaling mode allows the database file to be corrupted using ordinary SQL,
+                // it is disabled when SQLITE_DBCONFIG_DEFENSIVE is enabled.
+                QSqlQuery queryPragma_journal_mode("PRAGMA journal_mode = off");
+
+                // With synchronous OFF (0), SQLite continues without syncing as soon as it has handed data off to the operating system.
+                // If the application running SQLite crashes, the data will be safe, but the database might become corrupted if the operating system
+                // crashes or the computer loses power before that data has been written to non-volatile storage.
+                // On the other hand, commits can be much faster with synchronous OFF.
+                // Setting synchronous to OFF is a good option when creating a new database from scratch,
+                // in a scenario where the process of creating the database can be repeated if a power loss occurs in the middle,
+                // and when performance is critical.
+                QSqlQuery queryPragma_synchronous("PRAGMA synchronous = off");
+
+                // This pragma sets or queries the database connection locking-mode. The locking-mode is either NORMAL or EXCLUSIVE.
+                // In NORMAL locking-mode (the default unless overridden at compile-time using SQLITE_DEFAULT_LOCKING_MODE),
+                // a database connection unlocks the database file at the conclusion of each read or write transaction.
+                // When the locking-mode is set to EXCLUSIVE, the database connection never releases file-locks.
+                // The first time the database is read in EXCLUSIVE mode, a shared lock is obtained and held.
+                // The first time the database is written, an exclusive lock is obtained and held.
+                QSqlQuery queryPragma_locking_mode("PRAGMA locking_mode = exclusive");
+
+                // Query, set, or clear the automatic indexing capability.
+                // Automatic indexing is enabled by default as of version 3.7.17 (2013-05-20), but this might change in future releases of SQLite.
+                QSqlQuery queryPragma_automatic_index("PRAGMA automatic_index = false");
+
+                // Query or change the secure-delete setting. When secure_delete is on, SQLite overwrites deleted content with zeros.
+                // The default setting for secure_delete is determined by the SQLITE_SECURE_DELETE compile-time option and is normally off.
+                // The off setting for secure_delete improves performance by reducing the number of CPU cycles and the amount of disk I/O.
+                // Applications that wish to avoid leaving forensic traces after content is deleted or updated should enable the secure_delete pragma
+                // prior to performing the delete or update, or else run VACUUM after the delete or update.
+                QSqlQuery queryPragma_secure_delete("PRAGMA secure_delete = false");
+
                 // DB is generated in the specified location
                 QSqlQuery queryTable("CREATE TABLE passwords (hash text, prevalence integer)");
 
