@@ -31,7 +31,7 @@
 void qStdOut(const QString& text)
 {
     const char* line = text.toUtf8().constData();
-    printf(line);
+    printf("%s", line);
 }
 
 int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& destination)
