@@ -22,23 +22,29 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
-QTextStream& qStdOut()
+//QTextStream& qStdOut()
+//{
+//    static QTextStream ts(stdout);
+//    return ts;
+//}
+
+void qStdOut(const QString& text)
 {
-    static QTextStream ts(stdout);
-    return ts;
+    const char* line = text.toUtf8().constData();
+    printf(line);
 }
 
 int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& destination)
 {
-    qStdOut() << "Source File: " << source << "\n";
-    qStdOut() << "Destination SQLite Database: " << destination << "\n";
+    qStdOut("Source File: " + source + "\n");
+    qStdOut("Destination SQLite Database: " + destination + "\n");
 
     QFile sourceFile(source);
     QFile destinationFile(destination);
 
     if (destinationFile.exists())
     {
-        qStdOut() << "Error: Destination SQLite file already exists!\n";
+        qStdOut("Error: Destination SQLite file already exists!\n");
         return 1;
     }
 
@@ -48,7 +54,7 @@ int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& d
 
         if (sourceFile.open(QIODevice::ReadOnly | QIODevice::Text))
         {
-            qStdOut() << "Let's go ...\n";
+            qStdOut("Let's go ...\n");
 
             QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
             db.setDatabaseName(destination);
@@ -140,7 +146,7 @@ int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& d
                     if (count % 1000000 == 0)
                     {
                         qint64 step = count / 1000000;
-                        qStdOut() << "1.000.000 done" << " (" << QString::number(step) << ")" << "\n";
+                        qStdOut(QString("1.000.000 done (") + QString::number(step) + QString(")\n"));
                     }
 
                     count++;
@@ -151,14 +157,14 @@ int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& d
                 db.commit();
                 db.close();
 
-                qStdOut() << "SQLite database created successfully.\n";
+                qStdOut("SQLite database created successfully.\n");
             }
 
             sourceFile.close();
         }
         else
         {
-            qStdOut() << "Error: Unable to open/read source file!\n";
+            qStdOut("Error: Unable to open/read source file!\n");
             return 1;
         }
 
@@ -169,7 +175,7 @@ int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& d
     }
     else
     {
-        qStdOut() << "Error: Source file doesn't exist!\n";
+        qStdOut("Error: Source file doesn't exist!\n");
         return 1;
     }
 
@@ -197,7 +203,7 @@ int main(int argc, char *argv[])
 
     if (args.count() != 2)
     {
-        qStdOut() << "Error: Invalid number of arguments, expected 2 arguments: source and destination.\n";
+        qStdOut("Error: Invalid number of arguments, expected 2 arguments: source and destination.\n");
         return 1;
     }
 
@@ -207,7 +213,7 @@ int main(int argc, char *argv[])
 
     if (source.trimmed().isEmpty() || destination.trimmed().isEmpty())
     {
-        qStdOut() << "Error: Empty arguments are not allowed.\n";
+        qStdOut("Error: Empty arguments are not allowed.\n");
         return 1;
     }
 
