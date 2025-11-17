@@ -5,5 +5,5 @@ Comment=Convert Hash Text File to SQLite Database
 Exec=hibp2sqlite
 Icon=hibp2sqlite
 Terminal=true
-Categories=Office;
+Categories=Utility;
 
