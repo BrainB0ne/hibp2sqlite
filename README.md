@@ -1,4 +1,4 @@
-## Create a HaveIBeenPwned SQLite Database from a NTLM-hash text file
+### Create a HaveIBeenPwned SQLite Database from a NTLM-hash text file
 
 **Build Requirements:**
 
