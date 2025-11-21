@@ -182,6 +182,26 @@ int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& d
     return 0;
 }
 
+int showLicense()
+{
+    QFile licenseFile(":/LICENSE");
+    if (licenseFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream in(&licenseFile);
+        QString line = in.readLine();
+        while (!line.isNull())
+        {
+            qStdOut(QString("%1\n").arg(line));
+            line = in.readLine();
+        }
+
+        licenseFile.close();
+        return 0;
+    }
+
+    return 1;
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
@@ -195,16 +215,30 @@ int main(int argc, char *argv[])
     parser.addVersionOption();
     parser.addPositionalArgument("source", QCoreApplication::translate("main", "Source NTLM-hash text file to process."));
     parser.addPositionalArgument("destination", QCoreApplication::translate("main", "Destination SQLite database."));
+    // A boolean option with multiple names (-l, --license)
+    QCommandLineOption licenseOption(QStringList() << "l" << "license",
+        QCoreApplication::translate("main", "Displays license information."));
+    parser.addOption(licenseOption);
 
     // Process the actual command line arguments given by the user
     parser.process(app);
+
+    int retCode = -1;
+
+    bool license = parser.isSet(licenseOption);
+    if (license)
+    {
+        retCode = showLicense();
+        return retCode;
+    }
 
     const QStringList args = parser.positionalArguments();
 
     if (args.count() != 2)
     {
         qStdOut("Error: Invalid number of arguments, expected 2 arguments: source and destination.\n");
-        return 1;
+        retCode = 1;
+        return retCode;
     }
 
     // source is args.at(0), destination is args.at(1)
@@ -214,10 +248,11 @@ int main(int argc, char *argv[])
     if (source.trimmed().isEmpty() || destination.trimmed().isEmpty())
     {
         qStdOut("Error: Empty arguments are not allowed.\n");
-        return 1;
+        retCode = 1;
+        return retCode;
     }
 
-    int retCode = createSQLiteDatabaseFromHashTextFile(source.trimmed(), destination.trimmed());
+    retCode = createSQLiteDatabaseFromHashTextFile(source.trimmed(), destination.trimmed());
 
     return retCode;
 }

@@ -24,6 +24,9 @@ CONFIG += c++17 cmdline console
 SOURCES += \
         main.cpp
 
+RESOURCES = \
+        hibp2sqlite.qrc
+
 win32 {
 RC_FILE = hibp2sqlite.rc
 }
