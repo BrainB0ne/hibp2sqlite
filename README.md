@@ -5,7 +5,7 @@
 [Windows]
 
 - Microsoft Visual Studio 2022
-- Qt SDK 6.9.x / Qt Creator 18
+- Qt SDK 6.10.x / Qt Creator 18
 
 To obtain the NTLM-hash text file, use PwnedPasswordsDownloader from HaveIBeenPwned.
 
