@@ -1,5 +1,10 @@
 ### Create a HaveIBeenPwned SQLite Database from a NTLM-hash text file
 
+**Build Status:**
+
+[![CMake on Windows-Latest](https://github.com/BrainB0ne/hibp2sqlite/actions/workflows/cmake-windows-latest.yml/badge.svg)](https://github.com/BrainB0ne/hibp2sqlite/actions/workflows/cmake-windows-latest.yml)
+[![CMake on Ubuntu-Latest](https://github.com/BrainB0ne/hibp2sqlite/actions/workflows/cmake-ubuntu-latest.yml/badge.svg)](https://github.com/BrainB0ne/hibp2sqlite/actions/workflows/cmake-ubuntu-latest.yml)
+
 **Build Requirements:**
 
 [Windows]
