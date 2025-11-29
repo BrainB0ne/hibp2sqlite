@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(hibp2sqlite VERSION 0.1 LANGUAGES CXX)
+project(hibp2sqlite LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -36,10 +36,6 @@ qt_add_resources(hibp2sqlite "hibp2sqlite"
         "/"
     FILES
         ${hibp2sqlite_resource_files}
-)
-
-set_target_properties(hibp2sqlite PROPERTIES
-    WIN32_EXECUTABLE TRUE
 )
 
 include(GNUInstallDirs)
