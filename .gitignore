@@ -1,6 +1,6 @@
 /debug
 /release
-/build
+/*build
 /linux/AppDir/usr/bin/hibp2sqlite
 
 # Executables
