@@ -17,25 +17,20 @@ set(PROJECT_SOURCES
     hibp2sqlite.rc
 )
 
+set(RESOURCE
+    "hibp2sqlite.qrc"
+)
+
+qt_add_resources(PROJECT_RESOURCES ${RESOURCE})
+
 qt_add_executable(hibp2sqlite
     ${PROJECT_SOURCES}
+    ${PROJECT_RESOURCES}
 )
 
 target_link_libraries(hibp2sqlite PRIVATE
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Sql)
-
-# Resources:
-set(hibp2sqlite_resource_files
-    "LICENSE"
-)
-
-qt_add_resources(hibp2sqlite "hibp2sqlite"
-    PREFIX
-        "/"
-    FILES
-        ${hibp2sqlite_resource_files}
-)
 
 include(GNUInstallDirs)
 install(TARGETS hibp2sqlite
