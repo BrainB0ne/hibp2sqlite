@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 
 project(hibp2sqlite LANGUAGES CXX)
 
+set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/dist")
+
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -37,3 +39,23 @@ install(TARGETS hibp2sqlite
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+if(WIN32)
+    # Run Qt Deploy Tool
+    set(MY_APP hibp2sqlite)
+    set(executable_path "\${QT_DEPLOY_BIN_DIR}/$<TARGET_FILE_NAME:${MY_APP}>")
+    set(deploy_script "${CMAKE_CURRENT_BINARY_DIR}/deploy_${MY_APP}.cmake")
+
+    file(GENERATE OUTPUT ${deploy_script} CONTENT "
+    include(\"${QT_DEPLOY_SUPPORT}\")
+    qt_deploy_runtime_dependencies(
+        EXECUTABLE \"${executable_path}\"
+        PLUGINS_DIR bin
+        NO_TRANSLATIONS
+        NO_COMPILER_RUNTIME
+    )"
+    )
+
+    install(TARGETS ${MY_APP} DESTINATION bin)
+    install(SCRIPT ${deploy_script})
+endif()
