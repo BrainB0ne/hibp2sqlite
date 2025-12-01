@@ -40,28 +40,36 @@ install(TARGETS hibp2sqlite
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-# if(WIN32)
-#     # Run Qt Deploy Tool
-#     set(MY_APP hibp2sqlite)
-#     set(executable_path "\${QT_DEPLOY_BIN_DIR}/$<TARGET_FILE_NAME:${MY_APP}>")
-#     set(deploy_script "${CMAKE_CURRENT_BINARY_DIR}/deploy_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
-# 
-#     file(GENERATE OUTPUT ${deploy_script} CONTENT "
-# include(\"${QT_DEPLOY_SUPPORT}\")
-# qt_deploy_runtime_dependencies(
-#     EXECUTABLE \"${executable_path}\"
-#     PLUGINS_DIR bin
-#     NO_TRANSLATIONS
-#     NO_COMPILER_RUNTIME
-# )
-# file(ARCHIVE_CREATE
-#     OUTPUT \"${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.zip\"
-#     WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}/dist/bin\"
-#     PATHS 
-#         \".\"
-#     FORMAT \"zip\")"
-#     )
-# 
-#     install(TARGETS ${MY_APP} DESTINATION bin)
-#     install(SCRIPT ${deploy_script})
-# endif()
+
+# Run Qt Deploy Tool
+set(MY_APP hibp2sqlite)
+set(executable_path "\${QT_DEPLOY_BIN_DIR}/$<TARGET_FILE_NAME:${MY_APP}>")
+set(deploy_script "${CMAKE_CURRENT_BINARY_DIR}/deploy_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
+
+file(GENERATE OUTPUT ${deploy_script} CONTENT "
+include(\"${QT_DEPLOY_SUPPORT}\")
+qt_deploy_runtime_dependencies(
+    EXECUTABLE \"${executable_path}\"
+    PLUGINS_DIR bin
+    NO_TRANSLATIONS
+    NO_COMPILER_RUNTIME)"
+)
+
+if(WIN32)
+set(zip_script "${CMAKE_CURRENT_BINARY_DIR}/zip_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
+file(GENERATE OUTPUT ${zip_script} CONTENT "
+file(ARCHIVE_CREATE
+    OUTPUT \"${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.zip\"
+    WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}/dist/bin\"
+    PATHS 
+        \".\"
+    FORMAT \"zip\")"
+)    
+endif()
+
+install(TARGETS ${MY_APP} DESTINATION bin)
+install(SCRIPT ${deploy_script})
+
+if(WIN32)
+install(SCRIPT ${zip_script})
+endif()
