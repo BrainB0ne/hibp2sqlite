@@ -80,7 +80,8 @@ qt_deploy_runtime_dependencies(
     EXECUTABLE \"${executable_path}\"
     PLUGINS_DIR plugins
     NO_TRANSLATIONS
-    NO_COMPILER_RUNTIME)"
+    NO_COMPILER_RUNTIME
+    GENERATE_QT_CONF)"
 )
 
 set(tar_script "${CMAKE_CURRENT_BINARY_DIR}/tar_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
