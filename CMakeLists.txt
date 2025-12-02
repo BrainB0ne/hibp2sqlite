@@ -64,7 +64,7 @@ file(ARCHIVE_CREATE
     WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}/dist/bin\"
     PATHS 
         \".\"
-    FORMAT \"zip\"
+    FORMAT \"zip\")
 message(\"Created ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.zip\")"
 )
 elseif(UNIX)
@@ -76,7 +76,7 @@ file(ARCHIVE_CREATE
     PATHS 
         \"${CMAKE_CURRENT_SOURCE_DIR}/dist/bin\"
     FORMAT \"gnutar\"
-    COMPRESSION \"GZip\"
+    COMPRESSION \"GZip\")
 message(\"Created ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.tar.gz\")"
 )
 endif()
