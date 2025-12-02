@@ -20,6 +20,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install CMake (3.31.10)
+      uses: ssrobins/install-cmake@v1
+      with:
+        version: 3.31.10
+
     - name: Install Ninja (Linux)
       run: sudo apt install ninja-build  # let's install ninja through apt
 
