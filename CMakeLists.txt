@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(hibp2sqlite LANGUAGES CXX)
 
-set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/dist")
+set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/linux/AppDir/usr")
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -46,6 +46,7 @@ set(MY_APP hibp2sqlite)
 set(executable_path "\${QT_DEPLOY_BIN_DIR}/$<TARGET_FILE_NAME:${MY_APP}>")
 set(deploy_script "${CMAKE_CURRENT_BINARY_DIR}/deploy_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
 
+if(WIN32)
 file(GENERATE OUTPUT ${deploy_script} CONTENT "
 include(\"${QT_DEPLOY_SUPPORT}\")
 qt_deploy_runtime_dependencies(
@@ -55,7 +56,6 @@ qt_deploy_runtime_dependencies(
     NO_COMPILER_RUNTIME)"
 )
 
-if(WIN32)
 set(zip_script "${CMAKE_CURRENT_BINARY_DIR}/zip_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
 file(GENERATE OUTPUT ${zip_script} CONTENT "
 message(\"Creating ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.zip ...\")
@@ -68,13 +68,23 @@ file(ARCHIVE_CREATE
 message(\"Created ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.zip\")"
 )
 elseif(UNIX)
+file(GENERATE OUTPUT ${deploy_script} CONTENT "
+include(\"${QT_DEPLOY_SUPPORT}\")
+qt_deploy_runtime_dependencies(
+    EXECUTABLE \"${executable_path}\"
+    PLUGINS_DIR plugins
+    NO_TRANSLATIONS
+    NO_COMPILER_RUNTIME)"
+)
+
 set(tar_script "${CMAKE_CURRENT_BINARY_DIR}/tar_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
 file(GENERATE OUTPUT ${tar_script} CONTENT "
 message(\"Creating ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.tar.gz ...\")
 file(ARCHIVE_CREATE
     OUTPUT \"${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.tar.gz\"
+    WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}/linux\"
     PATHS 
-        \"${CMAKE_CURRENT_SOURCE_DIR}/dist/bin\"
+        \"AppDir\"
     FORMAT \"gnutar\"
     COMPRESSION \"GZip\")
 message(\"Created ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.tar.gz\")"
