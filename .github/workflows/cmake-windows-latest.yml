@@ -20,11 +20,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install CMake (3.31.10)
-      uses: ssrobins/install-cmake@v1
-      with:
-        version: 3.31.10
-
     - name: Install Ninja (Windows)
       run: choco install ninja  # let's install ninja through Chocolatey
 
