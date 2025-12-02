@@ -58,13 +58,27 @@ qt_deploy_runtime_dependencies(
 if(WIN32)
 set(zip_script "${CMAKE_CURRENT_BINARY_DIR}/zip_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
 file(GENERATE OUTPUT ${zip_script} CONTENT "
+message(\"Creating ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.zip ...\")
 file(ARCHIVE_CREATE
     OUTPUT \"${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.zip\"
     WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}/dist/bin\"
     PATHS 
         \".\"
-    FORMAT \"zip\")"
-)    
+    FORMAT \"zip\"
+message(\"Created ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.zip\")"
+)
+elseif(UNIX)
+set(tar_script "${CMAKE_CURRENT_BINARY_DIR}/tar_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
+file(GENERATE OUTPUT ${tar_script} CONTENT "
+message(\"Creating ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.tar.gz ...\")
+file(ARCHIVE_CREATE
+    OUTPUT \"${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.tar.gz\"
+    PATHS 
+        \"${CMAKE_CURRENT_SOURCE_DIR}/dist/bin\"
+    FORMAT \"gnutar\"
+    COMPRESSION \"GZip\"
+message(\"Created ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.tar.gz\")"
+)
 endif()
 
 install(TARGETS ${MY_APP} DESTINATION bin)
@@ -72,4 +86,7 @@ install(SCRIPT ${deploy_script})
 
 if(WIN32)
 install(SCRIPT ${zip_script})
+elseif(UNIX)
+install(SCRIPT ${tar_script})
 endif()
+
