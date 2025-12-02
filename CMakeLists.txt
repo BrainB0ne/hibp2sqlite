@@ -44,24 +44,23 @@ install(TARGETS hibp2sqlite
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-
 # Run Qt Deploy Tool
 set(MY_APP hibp2sqlite)
-set(executable_path "\${QT_DEPLOY_BIN_DIR}/$<TARGET_FILE_NAME:${MY_APP}>")
 set(deploy_script "${CMAKE_CURRENT_BINARY_DIR}/deploy_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
 
 if(WIN32)
-file(GENERATE OUTPUT ${deploy_script} CONTENT "
+    set(executable_path "\${QT_DEPLOY_BIN_DIR}/$<TARGET_FILE_NAME:${MY_APP}>")
+    file(GENERATE OUTPUT ${deploy_script} CONTENT "
 include(\"${QT_DEPLOY_SUPPORT}\")
 qt_deploy_runtime_dependencies(
     EXECUTABLE \"${executable_path}\"
     PLUGINS_DIR bin
     NO_TRANSLATIONS
     NO_COMPILER_RUNTIME)"
-)
+    )
 
-set(zip_script "${CMAKE_CURRENT_BINARY_DIR}/zip_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
-file(GENERATE OUTPUT ${zip_script} CONTENT "
+    set(zip_script "${CMAKE_CURRENT_BINARY_DIR}/zip_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
+    file(GENERATE OUTPUT ${zip_script} CONTENT "
 message(\"Creating ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.zip ...\")
 file(MAKE_DIRECTORY
     \"${CMAKE_CURRENT_SOURCE_DIR}/dist\")
@@ -72,20 +71,19 @@ file(ARCHIVE_CREATE
         \".\"
     FORMAT \"zip\")
 message(\"Created ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.zip\")"
-)
+    )
 elseif(UNIX)
-file(GENERATE OUTPUT ${deploy_script} CONTENT "
-include(\"${QT_DEPLOY_SUPPORT}\")
-qt_deploy_runtime_dependencies(
-    EXECUTABLE \"${executable_path}\"
-    PLUGINS_DIR plugins
-    NO_TRANSLATIONS
-    NO_COMPILER_RUNTIME
-    GENERATE_QT_CONF)"
-)
+    # Generate the deployment script for the target MY_APP.
+    qt_generate_deploy_app_script(
+        TARGET ${MY_APP}
+        OUTPUT_SCRIPT deploy_script
+        NO_UNSUPPORTED_PLATFORM_ERROR
+        NO_TRANSLATIONS
+        NO_COMPILER_RUNTIME    
+    )
 
-set(tar_script "${CMAKE_CURRENT_BINARY_DIR}/tar_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
-file(GENERATE OUTPUT ${tar_script} CONTENT "
+    set(tar_script "${CMAKE_CURRENT_BINARY_DIR}/tar_${MY_APP}_${CMAKE_BUILD_TYPE}.cmake")
+    file(GENERATE OUTPUT ${tar_script} CONTENT "
 message(\"Creating ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.tar.gz ...\")
 file(MAKE_DIRECTORY
     \"${CMAKE_CURRENT_SOURCE_DIR}/dist\")
@@ -97,15 +95,14 @@ file(ARCHIVE_CREATE
     FORMAT \"gnutar\"
     COMPRESSION \"GZip\")
 message(\"Created ${CMAKE_CURRENT_SOURCE_DIR}/dist/${MY_APP}.tar.gz\")"
-)
+    )
 endif()
-
-install(TARGETS ${MY_APP} DESTINATION bin)
-install(SCRIPT ${deploy_script})
 
 if(WIN32)
+install(TARGETS ${MY_APP} DESTINATION bin)
+install(SCRIPT ${deploy_script})
 install(SCRIPT ${zip_script})
 elseif(UNIX)
+install(SCRIPT ${deploy_script})
 install(SCRIPT ${tar_script})
 endif()
-
