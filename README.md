@@ -34,6 +34,7 @@ Usage: hibp2sqlite.exe [options] source destination
 Options:
   -?, -h, --help  Displays help on commandline options.
   -v, --version   Displays version information.
+  -l, --license   Displays license information.
 
 Arguments:
   source          Source NTLM-hash text file to process.
