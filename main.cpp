@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv);
 
     QCoreApplication::setApplicationName("hibp2sqlite");
-    QCoreApplication::setApplicationVersion("0.1.0");
+    QCoreApplication::setApplicationVersion("0.2.0");
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Create a HaveIBeenPwned SQLite Database from a NTLM-hash text file");
