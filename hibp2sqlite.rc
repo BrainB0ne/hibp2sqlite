@@ -21,8 +21,8 @@
 IDI_ICON1   ICON    DISCARDABLE     "images/hibp2sqlite.ico"
 
 VS_VERSION_INFO     VERSIONINFO
-FILEVERSION         0, 1, 0, 0
-PRODUCTVERSION      0, 1, 0, 0
+FILEVERSION         0, 2, 0, 0
+PRODUCTVERSION      0, 2, 0, 0
 FILEFLAGSMASK       0x3fL
 FILEFLAGS           0
 FILEOS              VOS_NT_WINDOWS32
@@ -39,12 +39,12 @@ BEGIN
         BEGIN
             VALUE   "CompanyName",      "BrainByteZ\0"
             VALUE   "FileDescription",  "hibp2sqlite\0"
-            VALUE   "FileVersion",      "0.1.0.0\0"
+            VALUE   "FileVersion",      "0.2.0.0\0"
             VALUE   "InternalName",     "hibp2sqlite\0"
             VALUE   "LegalCopyright",   "Copyleft 2025\0"
             VALUE   "OriginalFilename", "hibp2sqlite.exe\0"
             VALUE   "ProductName",      "hibp2sqlite\0"
-            VALUE   "ProductVersion",   "0.1.0.0\0"
+            VALUE   "ProductVersion",   "0.2.0.0\0"
         END
     END
 END
