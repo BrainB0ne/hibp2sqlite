@@ -18,7 +18,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Install Ninja (Windows)
       run: choco install ninja  # let's install ninja through Chocolatey
