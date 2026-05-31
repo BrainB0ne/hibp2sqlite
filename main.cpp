@@ -30,8 +30,9 @@
 
 void qStdOut(const QString& text)
 {
-    const char* line = text.toUtf8().constData();
-    printf("%s", line);
+    QByteArray utf8 = text.toUtf8();
+    printf("%s\n", utf8.constData());
+    fflush(stdout);
 }
 
 int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& destination)
