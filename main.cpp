@@ -22,17 +22,10 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
-//QTextStream& qStdOut()
-//{
-//    static QTextStream ts(stdout);
-//    return ts;
-//}
-
 void qStdOut(const QString& text)
 {
-    QByteArray utf8 = text.toUtf8();
-    printf("%s\n", utf8.constData());
-    fflush(stdout);
+    QTextStream out(stdout);
+    out << text << Qt::endl;
 }
 
 int createSQLiteDatabaseFromHashTextFile(const QString& source, const QString& destination)
